@@ -2,16 +2,16 @@ TARGET=laska
 CC=g++
 SRC=SourceFiles
 CPPFLAGS := -Wall -IHeaderFiles
-CXXFLAGS := `wx-config --cxxflags --libs`
+CXXFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
 
-all: App.o MainWindow.o
-	$(CC) $(CPPFLAGS) App.o MainWindow.o $(CXXFLAGS) -o $(TARGET)
+all: Main.o App.o 
+	$(CC) $(CPPFLAGS) App.o Main.o $(CXXFLAGS) -o $(TARGET)
 
 App.o: $(SRC)/App.cpp
 	$(CC) -c $(CPPFLAGS) $(SRC)/App.cpp $(CXXFLAGS)
 
-MainWindow.o: $(SRC)/MainWindow.cpp
-	$(CC) -c $(CPPFLAGS) $(SRC)/MainWindow.cpp $(CXXFLAGS) 
+Main.o: $(SRC)/Main.cpp
+	$(CC) -c $(CPPFLAGS) $(SRC)/Main.cpp $(CXXFLAGS) 
 
 clean:
 	rm -f *.o

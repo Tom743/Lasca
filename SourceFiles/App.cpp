@@ -1,20 +1,38 @@
-#include "MainWindow.h"
+#include <SFML/Graphics.hpp>
 #include "App.h"
-#include <wx/wx.h>
 
-bool App::OnInit()
-{
-	if (!wxApp::OnInit()) return false;
 
-	MainWindow *main = new MainWindow();
-	main->Show(true);
+App::App() {
 
-	return true;
 }
 
 
+void App::ProcessArguments(std::string args) {
+    
+}
 
-wxIMPLEMENT_APP(App);
+int App::Run() {
 
+    sf::RenderWindow window(sf::VideoMode(200, 200), "Laska");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
 
+    while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed) window.close();
+		}
 
+		window.clear();
+		window.draw(shape);
+		window.display();
+	}
+
+	return 0;
+}
+
+App::~App() {
+    
+}

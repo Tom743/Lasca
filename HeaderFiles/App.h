@@ -1,7 +1,13 @@
-#include <wx/wx.h>
+#include <SFML/Graphics.hpp>
 
-class App: public wxApp
-{
+class App {
 public:
-	virtual bool OnInit();
+	App();
+	void ProcessArguments(std::string args);
+	int Run();
+	~App();
+
+private:
+	sf::RenderWindow window;
+	sf::CircleShape shape;
 };
