@@ -1,21 +1,18 @@
 #include <string>
 #include "App.h"
-#include "Codes.h"
 
-std::string argc = ""; // TODO command line args
-
-int main()
+int main(int argc, char* argv[])
 {
     // ExitCode of our program
-    int exitCode = Codes::StatusNoError;
+    int exitCode;
 
     // Initialize the outer layer of the engine
     App* app = new App();
 
     // Process command line arguments
-    app->ProcessArguments(argc);
+    app->ProcessArguments(argc, argv);
 
-    // Run the game loop
+    // Start UI and run main loop
     exitCode = app->Run();
 
     // Cleanup
