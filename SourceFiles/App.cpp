@@ -52,7 +52,34 @@ void App::GameLoop()
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 
-	// Main loop
+
+	// Make sure we have at least one state active
+    if(mStateManager.IsEmpty())
+    {
+		// Exit with an error since there isn't an active state
+		Quit(Codes::StatusAppInitFailed);
+    }
+
+	while(mRunning && mWindow->isOpen() && !mStateManager.IsEmpty())
+	{
+		IState& state = mStateManager.GetActiveState();
+
+		ProcessInput(state);
+
+		// Clear the screen
+		mWindow->clear();
+
+		// Let the current game state draw its things
+		state.Draw();
+
+		// Display render window to the screen
+		mWindow->display();	
+
+		// Handle Cleanup of any recently removed states at this point as needed
+		mStateManager.HandleCleanup(); 
+	}
+
+	// Main loop TODO mvoe to game class
 	while (mWindow->isOpen())
 	{
 		// Check all the window's events that were triggered since the last iteration of the loop
@@ -78,5 +105,6 @@ void App::CleanUp() {}
 
 App::~App() 
 {
-    
+    // Make sure the running flag sets to false
+	mRunning = false;
 }
