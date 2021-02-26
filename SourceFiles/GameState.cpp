@@ -13,6 +13,7 @@ GameState::~GameState()
 void GameState::Init(sf::RenderWindow* window)
 {
 	gWindow = window;
+	gWindow->setFramerateLimit(mFrameRateLimit); // This state's frame rate limit
 }
 
 bool GameState::ProcessInput()
@@ -31,5 +32,6 @@ void GameState::Draw()
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 	
-	gWindow->draw(shape);
+	//gWindow->draw(shape);
+	gWindow->draw(mTestpiece.GetSprite());
 }

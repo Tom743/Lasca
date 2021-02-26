@@ -1,4 +1,5 @@
 #include "SFML/Graphics.hpp"
+#include "Piece.h"
 
 class GameState {
 public:
@@ -16,4 +17,8 @@ public:
 
 private:
 	sf::RenderWindow* gWindow;
+	int mFrameRateLimit;
+
+	// test
+	Piece mTestpiece;
 };

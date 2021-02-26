@@ -43,8 +43,9 @@ int App::Run()
 void App::InitRenderer()
 {
 	// TODO use settings of a settings config file
-	mWindow = new sf::RenderWindow(sf::VideoMode(200, 200), "Laska");
-	mWindow->setFramerateLimit(30);
+	mWindow = new sf::RenderWindow(sf::VideoMode(800, 600), "Laska", sf::Style::Titlebar | sf::Style::Close);
+	mWindow->setPosition(sf::Vector2i(10, 50));
+	mWindow->setFramerateLimit(30);  // Initial framerate. Can be changed by the states
 }
 
 void App::GameLoop() 
@@ -64,7 +65,6 @@ void App::GameLoop()
 		// Let the current game state draw its things
 		mMainState.Draw();
 
-
 		// Display render window to the screen
 		mWindow->display();	
 
@@ -74,11 +74,6 @@ void App::GameLoop()
 
 	// No errors happened. Errors would make this function return before it reaches this line
 	mExitCode = Codes::Success;
-}
-
-void App::Quit()
-{
-
 }
 
 void App::CleanUp() {}
