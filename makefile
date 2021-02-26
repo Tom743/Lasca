@@ -1,27 +1,18 @@
-TARGET=laska
-CC=g++
-SRC=SourceFiles
-CPPFLAGS := -Wall -IHeaderFiles
+CC := g++
+TARGET := laska
+
+SRC_DIR := src
+OBJ_DIR := obj
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+CPPFLAGS := -Wall -Iinclude
 CXXFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
 
-all: Main.o App.o GameState.o Piece.o
-	$(CC) $(CPPFLAGS) App.o Main.o GameState.o Piece.o $(CXXFLAGS) -o $(TARGET)
+$(TARGET): $(OBJ_FILES)
+	$(CC) $(CPPFLAGS) -o $@ $^ $(CXXFLAGS)
 
-App.o: $(SRC)/App.cpp
-	$(CC) -c $(CPPFLAGS) $(SRC)/App.cpp $(CXXFLAGS)
-
-Main.o: $(SRC)/Main.cpp
-	$(CC) -c $(CPPFLAGS) $(SRC)/Main.cpp $(CXXFLAGS) 
-
-GameState.o: $(SRC)/GameState.cpp
-	$(CC) -c $(CPPFLAGS) $(SRC)/GameState.cpp $(CXXFLAGS) 
-	
-Piece.o: $(SRC)/Piece.cpp
-	$(CC) -c $(CPPFLAGS) $(SRC)/Piece.cpp $(CXXFLAGS) 
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) $(CPPFLAGS) -c -o $@ $< $(CXXFLAGS) 
 
 clean:
-	rm -f *.o
-
-andlaunch: all
-	./laska
-
+	rm -fv $(OBJ_FILES) $(TARGET)
