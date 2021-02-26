@@ -9,7 +9,7 @@ to each state and call them form the state manager
 
 App::App()
 {
-
+	
 }
 
 
@@ -49,17 +49,21 @@ void App::InitRenderer()
 
 void App::GameLoop() 
 {
+	// TODO make statemanager take care of init and every other thing about gamestates
+	mMainState.Init(mWindow);
 
 	while(mRunning && mWindow->isOpen())
 	{
 		// Input processing loop
-		ProcessInput();
+		bool quit = mMainState.ProcessInput();
+		if (quit) mWindow->close();
 
 		// Clear the screen
 		mWindow->clear();
 
 		// Let the current game state draw its things
-		Draw();
+		mMainState.Draw();
+
 
 		// Display render window to the screen
 		mWindow->display();	
@@ -72,24 +76,9 @@ void App::GameLoop()
 	mExitCode = Codes::Success;
 }
 
-void App::ProcessInput()
+void App::Quit()
 {
-	// Check all the window's events that were triggered since the last iteration of the loop
-	sf::Event event;
-	while (mWindow->pollEvent(event))
-	{
-		if (event.type == sf::Event::Closed) mWindow->close();
-	}
-}
 
-void App::Draw()
-{
-	// test
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-	// Draw everything
-	mWindow->draw(shape);
 }
 
 void App::CleanUp() {}
