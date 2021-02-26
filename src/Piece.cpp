@@ -2,7 +2,7 @@
 
 
 Piece::Piece() {
-    mTexture.loadFromFile("ResourceFiles/BlackChecker.png");
+    mTexture.loadFromFile("res/BlackChecker.png");
 	mTexture.setSmooth(true);
 	mSprite.setTexture(mTexture);
 }
