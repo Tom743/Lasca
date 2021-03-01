@@ -43,7 +43,7 @@ int App::Run()
 void App::InitRenderer()
 {
 	// TODO use settings of a settings config file
-	mWindow = new sf::RenderWindow(sf::VideoMode(800, 600), "Laska", sf::Style::Titlebar | sf::Style::Close);
+	mWindow = new sf::RenderWindow(sf::VideoMode(800, 600), "Lasca", sf::Style::Titlebar | sf::Style::Close);
 	mWindow->setPosition(sf::Vector2i(10, 50));
 	mWindow->setFramerateLimit(30);  // Initial framerate. Can be changed by the states
 }

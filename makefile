@@ -1,5 +1,5 @@
 CC := g++
-TARGET := laska
+TARGET := Lasca
 
 SRC_DIR := src
 OBJ_DIR := obj
