@@ -18,10 +18,42 @@ void GameState::Init(sf::RenderWindow* window)
 
 bool GameState::ProcessInput()
 {
+	sf::Vector2f static offset;
+	sf::Vector2f oldPos, newPos;
+	bool static isMove;
 	sf::Event event;
 	while (gWindow->pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed) return true;
+
+		/////drag and drop test//////
+		sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(*gWindow));
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				if (mTestpiece.GetSprite().getGlobalBounds().contains(mousePos))
+				{
+					oldPos = mTestpiece.GetSprite().getPosition();
+					offset = mousePos-oldPos;
+					isMove=true;
+				}
+			}
+		}
+		if (event.type == sf::Event::MouseButtonReleased)
+		{
+			if (event.mouseButton.button == sf::Mouse::Left && isMove)
+			{
+				newPos = mousePos-offset;
+				mTestpiece.SetPosition(newPos);         
+				isMove=false;          
+			}    
+		}
+		if (isMove) {
+			newPos = mousePos-offset;
+			mTestpiece.SetPosition(newPos);  
+		}
 	}
 	return false;
 }
@@ -29,9 +61,5 @@ bool GameState::ProcessInput()
 void GameState::Draw()
 {
 	// test
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-	
-	//gWindow->draw(shape);
 	gWindow->draw(mTestpiece.GetSprite());
 }
