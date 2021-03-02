@@ -2,7 +2,10 @@
 
 GameState::GameState()
 {
-
+	// Create some test pieces
+	for (int i=0; i<10; i++) {
+		mPieces.push_back(new Piece(sf::Vector2f(i*10, 0)));
+	}
 }
 
 GameState::~GameState()
@@ -18,41 +21,55 @@ void GameState::Init(sf::RenderWindow* window)
 
 bool GameState::ProcessInput()
 {
-	sf::Vector2f static offset;
+	// Temporary variables for drag and drop functionality
+	static sf::Vector2f offset;
 	sf::Vector2f oldPos, newPos;
-	bool static isMove;
+	static Piece* movingObject;
+
+	// Position of the mouse at this iteration of the game loop
+	sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(*gWindow));
+
+	// Event loop
 	sf::Event event;
 	while (gWindow->pollEvent(event))
 	{
+		// Close button was clicked
 		if (event.type == sf::Event::Closed) return true;
 
-		/////drag and drop test//////
-		sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(*gWindow));
-
-		if (event.type == sf::Event::MouseButtonPressed)
+		// Mouse events
+		else if (event.type == sf::Event::MouseButtonPressed)
 		{
+			// Left mouse button events
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				if (mTestpiece.GetSprite().getGlobalBounds().contains(mousePos))
+				// If the user user is trying to move a piece move it
+				for (Piece* p : mPieces)
 				{
-					oldPos = mTestpiece.GetSprite().getPosition();
-					offset = mousePos-oldPos;
-					isMove=true;
+					if (p->GetSprite().getGlobalBounds().contains(mousePos))
+					{
+						oldPos = p->GetSprite().getPosition();
+						offset = mousePos-oldPos;
+						movingObject=p;
+					}
 				}
 			}
 		}
-		if (event.type == sf::Event::MouseButtonReleased)
+		else if (event.type == sf::Event::MouseButtonReleased)
 		{
-			if (event.mouseButton.button == sf::Mouse::Left && isMove)
+			// If the user was moving a piece, drop it
+			if (event.mouseButton.button == sf::Mouse::Left && movingObject!=nullptr)
 			{
 				newPos = mousePos-offset;
-				mTestpiece.SetPosition(newPos);         
-				isMove=false;          
+				movingObject->SetPosition(newPos);         
+				movingObject=nullptr;          
 			}    
 		}
-		if (isMove) {
+
+		// If we were in the middle of moving a piece, keep it on the cursor
+		if (movingObject!=nullptr) 
+		{
 			newPos = mousePos-offset;
-			mTestpiece.SetPosition(newPos);  
+			movingObject->SetPosition(newPos);  
 		}
 	}
 	return false;
@@ -60,6 +77,6 @@ bool GameState::ProcessInput()
 
 void GameState::Draw()
 {
-	// test
-	gWindow->draw(mTestpiece.GetSprite());
+	// Draw the game pieces
+	for (Piece* p : mPieces) gWindow->draw(p->GetSprite());
 }

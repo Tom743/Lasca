@@ -9,16 +9,16 @@ public:
 	// Load assets
 	void Init(sf::RenderWindow* window);
 
-	// Process user input. Returns true if the app whould quit
+	// Process user input. Returns true if the app should quit
 	bool ProcessInput();
 
 	// Draw the state's screen
 	void Draw();
 
 private:
-	sf::RenderWindow* gWindow;
-	int mFrameRateLimit;
+	// All the pieces of the game
+	std::vector<Piece*> mPieces;
 
-	// test
-	Piece mTestpiece;
+	sf::RenderWindow* gWindow;
+	const int mFrameRateLimit = 60;
 };
