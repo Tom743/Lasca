@@ -42,8 +42,10 @@ int App::Run()
 
 void App::InitRenderer()
 {
-	// TODO use settings of a settings config file
-	mWindow = new sf::RenderWindow(sf::VideoMode(800, 600), "Lasca", sf::Style::Titlebar | sf::Style::Close);
+	// TODO get settings from config file
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 8;
+	mWindow = new sf::RenderWindow(sf::VideoMode(800, 600), "Lasca", sf::Style::Titlebar | sf::Style::Close, settings);
 	mWindow->setPosition(sf::Vector2i(10, 50));
 	mWindow->setFramerateLimit(30);  // Initial framerate. Can be changed by the states
 }
@@ -60,7 +62,7 @@ void App::GameLoop()
 		if (quit) mWindow->close();
 
 		// Clear the screen
-		mWindow->clear();
+		mWindow->clear(mMainState.getBackGroudColor());
 
 		// Let the current game state draw its things
 		mMainState.Draw();
@@ -73,7 +75,7 @@ void App::GameLoop()
 	}
 
 	// No errors happened. Errors would make this function return before it reaches this line
-	mExitCode = Codes::Success;
+	mExitCode = codes::ExitStatus::Success;
 }
 
 void App::CleanUp() {}

@@ -1,9 +1,9 @@
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 class Piece
 {
 public:
-	Piece(sf::Vector2f pos = sf::Vector2f(0, 0));
+	Piece(bool color, sf::Vector2f pos = sf::Vector2f(0, 0));
 	~Piece();
 	sf::Sprite GetSprite();
 	void SetPosition(sf::Vector2f pos);

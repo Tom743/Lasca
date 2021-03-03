@@ -1,8 +1,10 @@
+#include <SFML/Graphics.hpp>
 #include "Piece.h"
-#include "SFML/Graphics.hpp"
+#include "Codes.h"
 
-Piece::Piece(sf::Vector2f pos = sf::Vector2f(0, 0)) {
-    mTexture.loadFromFile("res/BlackChecker.png");
+Piece::Piece(bool color, sf::Vector2f pos)
+{
+    mTexture.loadFromFile(color ? "res/BlackChecker.png" : "res/WhiteChecker.png");
 	mTexture.setSmooth(true);
 	mSprite.setTexture(mTexture);
 	SetPosition(pos);

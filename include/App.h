@@ -19,7 +19,7 @@ private:
 	bool mRunning = false;
 
 	// Whenever an anomaly occurs, change this to the respective code
-	int mExitCode = Codes::StatusNoError;
+	int mExitCode = codes::ExitStatus::StatusNoError;
 
 private:
 	// TODO move to state manager or sth

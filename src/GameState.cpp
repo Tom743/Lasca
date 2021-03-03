@@ -4,7 +4,11 @@ GameState::GameState()
 {
 	// Create some test pieces
 	for (int i=0; i<10; i++) {
-		mPieces.push_back(new Piece(sf::Vector2f(i*10, 0)));
+		mPieces.push_back(new Piece(i%2==0, sf::Vector2f(i*10, 0)));
+	}
+	// Create some test cells
+	for (int i=0; i<3; i++) {
+		mCells.push_back(new Cell(50, sf::Vector2f(i*150, 0)));
 	}
 }
 
@@ -77,6 +81,12 @@ bool GameState::ProcessInput()
 
 void GameState::Draw()
 {
-	// Draw the game pieces
+	// Draw everything
+	for (Cell* c : mCells) gWindow->draw(*c);
 	for (Piece* p : mPieces) gWindow->draw(p->GetSprite());
+}
+
+sf::Color GameState::getBackGroudColor()
+{
+	return mBackgroundColor;
 }
