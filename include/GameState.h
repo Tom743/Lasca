@@ -16,7 +16,7 @@ public:
 	// Draw the state's screen
 	void Draw();
 
-	// Get the color that should fill the windown on clear
+	// Get the color that should fill the window on clear
 	sf::Color getBackGroudColor();
 
 private:
@@ -24,7 +24,7 @@ private:
 	std::vector<Cell*> mCells;
 	std::vector<Piece*> mPieces;
 
-	// The color that should fill the windown on clear
+	// The color that should fill the window on clear
 	sf::Color mBackgroundColor = sf::Color(56, 45, 39);
 
 	sf::RenderWindow* gWindow;
