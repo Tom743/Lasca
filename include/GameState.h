@@ -22,7 +22,7 @@ public:
 
 private:
 	// Drawables of the game
-	std::vector<Cell*> mBoard;
+	std::vector<Cell*> mBoardCells;
 	std::vector<Piece*> mPieces;
 
 	// Window and window configuration

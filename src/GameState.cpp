@@ -23,7 +23,7 @@ void GameState::Init(sf::RenderWindow* window)
 		for (int j=0; j<3+!(i%2); j++) {
 			sf::Vector2f pos = sf::Vector2f(j*mCellSize*2+(i%2)*mCellSize, i*mCellSize);
 			Cell* cell = new Cell(mCellSize, pos);
-			mBoard.push_back(cell);
+			mBoardCells.push_back(cell);
 			if (i!=3) mPieces.push_back(new Piece(i<3, cell));
 		}
 	}
@@ -33,7 +33,7 @@ bool GameState::ProcessInput()
 {
 	// Temporary variables for drag and drop functionality
 	static sf::Vector2f offset;
-	sf::Vector2f oldPos, newPos;
+	static sf::Vector2f oldPos, newPos;
 	static Piece* movingObject;
 
 	// Position of the mouse at this iteration of the game loop
@@ -57,7 +57,7 @@ bool GameState::ProcessInput()
 				{
 					if (p->GetSprite().getGlobalBounds().contains(mousePos))
 					{
-						oldPos = p->GetSprite().getPosition();
+						oldPos = p->GetPosition();
 						offset = mousePos-oldPos;
 						movingObject=p;
 					}
@@ -69,13 +69,29 @@ bool GameState::ProcessInput()
 			// If the user was moving a piece, drop it
 			if (event.mouseButton.button == sf::Mouse::Left && movingObject!=nullptr)
 			{
-				newPos = mousePos-offset;
-				movingObject->SetSpritePosition(newPos);         
-				movingObject=nullptr;          
+				bool success = false;  // If this is not an appropiate place, remains false to later return the piece to its original place
+				for (Cell* c : mBoardCells)  // Implment an ordered matrix search algorithm to speed this up unnecessarily
+				{
+					// Move to that cell
+					if (c->getGlobalBounds().contains(mousePos))
+					{
+						movingObject->AttachToCell(c);
+						movingObject = nullptr;
+						success = true;
+						break;
+					}
+				}
+				// Return it to the original place
+				if (!success)
+				{
+					movingObject->SetSpritePosition(oldPos);
+					movingObject = nullptr;
+				}
+				       
 			}    
 		}
 
-		// If we were in the middle of moving a piece, keep it on the cursor
+		// If the user was moving a piece, keep it on the cursor
 		if (movingObject!=nullptr) 
 		{
 			newPos = mousePos-offset;
@@ -88,7 +104,7 @@ bool GameState::ProcessInput()
 void GameState::Draw()
 {
 	// Draw everything
-	for (Cell* c : mBoard) gWindow->draw(*c);
+	for (Cell* c : mBoardCells) gWindow->draw(*c);
 	for (Piece* p : mPieces) gWindow->draw(p->GetSprite());
 }
 

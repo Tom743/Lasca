@@ -5,7 +5,7 @@
 Piece::Piece(bool color, Cell* cell)
 {
 	LoadTexture(color, cell->getRadius()*2);
-	AttachToCell(cell->getPosition(), cell->getRadius()*2);
+	AttachToCell(cell);
 }
 
 
@@ -20,8 +20,10 @@ sf::Sprite Piece::GetSprite()
 	return mSprite;
 }
 
-void Piece::AttachToCell(sf::Vector2f cellPos, float cellSize) 
+void Piece::AttachToCell(Cell* cell) 
 {
+	sf::Vector2f cellPos = cell->getPosition();
+	float cellSize = cell->getRadius()*2;
 	sf::Vector2f scaleFactors = mSprite.getScale();
 	sf::Vector2u size = mTexture.getSize();
 	size.x *= scaleFactors.x;
