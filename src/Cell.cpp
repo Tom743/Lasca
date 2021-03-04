@@ -1,10 +1,10 @@
 #include "Cell.h"
 
-Cell::Cell(float radius, sf::Vector2f pos) : CircleShape(radius)
+Cell::Cell(float diameter, sf::Vector2f pos) : CircleShape(diameter/2)
 {
 	CircleShape::setPointCount(40);
 	CircleShape::setPosition(pos);
-	mTexture.loadFromFile("res/Wood1.jpg", sf::IntRect(0, 0, radius*2, radius*2));
+	mTexture.loadFromFile("res/Wood1.jpg", sf::IntRect(0, 0, diameter, diameter));
 	mTexture.setSmooth(true);
 	CircleShape::setTexture(&mTexture);
 	CircleShape::setOutlineColor(sf::Color(36, 28, 24));

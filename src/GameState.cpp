@@ -2,14 +2,7 @@
 
 GameState::GameState()
 {
-	// Create some test pieces
-	for (int i=0; i<10; i++) {
-		mPieces.push_back(new Piece(i%2==0, sf::Vector2f(i*10, 0)));
-	}
-	// Create some test cells
-	for (int i=0; i<3; i++) {
-		mCells.push_back(new Cell(50, sf::Vector2f(i*150, 0)));
-	}
+	
 }
 
 GameState::~GameState()
@@ -21,6 +14,19 @@ void GameState::Init(sf::RenderWindow* window)
 {
 	gWindow = window;
 	gWindow->setFramerateLimit(mFrameRateLimit); // This state's frame rate limit
+
+
+	mCellSize = std::min(gWindow->getSize().x, gWindow->getSize().y)/7;
+
+	// Initiate the board
+	for (int i=0; i<7; i++) {
+		for (int j=0; j<3+!(i%2); j++) {
+			sf::Vector2f pos = sf::Vector2f(j*mCellSize*2+(i%2)*mCellSize, i*mCellSize);
+			Cell* cell = new Cell(mCellSize, pos);
+			mBoard.push_back(cell);
+			if (i!=3) mPieces.push_back(new Piece(i<3, cell));
+		}
+	}
 }
 
 bool GameState::ProcessInput()
@@ -64,7 +70,7 @@ bool GameState::ProcessInput()
 			if (event.mouseButton.button == sf::Mouse::Left && movingObject!=nullptr)
 			{
 				newPos = mousePos-offset;
-				movingObject->SetPosition(newPos);         
+				movingObject->SetSpritePosition(newPos);         
 				movingObject=nullptr;          
 			}    
 		}
@@ -73,7 +79,7 @@ bool GameState::ProcessInput()
 		if (movingObject!=nullptr) 
 		{
 			newPos = mousePos-offset;
-			movingObject->SetPosition(newPos);  
+			movingObject->SetSpritePosition(newPos);  
 		}
 	}
 	return false;
@@ -82,7 +88,7 @@ bool GameState::ProcessInput()
 void GameState::Draw()
 {
 	// Draw everything
-	for (Cell* c : mCells) gWindow->draw(*c);
+	for (Cell* c : mBoard) gWindow->draw(*c);
 	for (Piece* p : mPieces) gWindow->draw(p->GetSprite());
 }
 

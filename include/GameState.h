@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Piece.h"
-#include "Cell.h"
+
+class Cell;
 
 class GameState {
 public:
@@ -21,12 +22,12 @@ public:
 
 private:
 	// Drawables of the game
-	std::vector<Cell*> mCells;
+	std::vector<Cell*> mBoard;
 	std::vector<Piece*> mPieces;
 
-	// The color that should fill the window on clear
-	sf::Color mBackgroundColor = sf::Color(56, 45, 39);
-
+	// Window and window configuration
 	sf::RenderWindow* gWindow;
+	sf::Color mBackgroundColor = sf::Color(56, 45, 39);
 	const int mFrameRateLimit = 60;
+	int mCellSize;
 };

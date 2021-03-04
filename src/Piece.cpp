@@ -2,12 +2,17 @@
 #include "Piece.h"
 #include "Codes.h"
 
-Piece::Piece(bool color, sf::Vector2f pos)
+Piece::Piece(bool color, Cell* cell)
 {
-    mTexture.loadFromFile(color ? "res/BlackChecker.png" : "res/WhiteChecker.png");
-	mTexture.setSmooth(true);
-	mSprite.setTexture(mTexture);
-	SetPosition(pos);
+	LoadTexture(color, cell->getRadius()*2);
+	AttachToCell(cell->getPosition(), cell->getRadius()*2);
+}
+
+
+Piece::Piece(bool color, float cellSize, sf::Vector2f pos)
+{
+	LoadTexture(color, cellSize);
+	SetSpritePosition(pos);
 }
 
 sf::Sprite Piece::GetSprite() 
@@ -15,14 +20,41 @@ sf::Sprite Piece::GetSprite()
 	return mSprite;
 }
 
-void Piece::SetPosition(sf::Vector2f pos)
+void Piece::AttachToCell(sf::Vector2f cellPos, float cellSize) 
+{
+	sf::Vector2f scaleFactors = mSprite.getScale();
+	sf::Vector2u size = mTexture.getSize();
+	size.x *= scaleFactors.x;
+	size.y *= scaleFactors.y;
+
+	sf::Vector2f piecePos = cellPos;
+	piecePos.x+=(cellSize-size.x)/2;
+	piecePos.y+=(cellSize-size.y)/2;
+	SetSpritePosition(piecePos);
+
+}
+
+void Piece::LoadTexture(bool color, float cellSize)
+{
+	// Texture settings
+    mTexture.loadFromFile(color ? "res/BlackChecker.png" : "res/WhiteChecker.png");
+	mTexture.setSmooth(true);
+
+	// Scale
+	sf::Vector2u textureSize = mTexture.getSize();
+	float scaleFactor = (cellSize-10) / std::max(textureSize.x, textureSize.y);
+	mSprite.setTexture(mTexture);
+	mSprite.setScale(scaleFactor, scaleFactor);
+}
+
+void Piece::SetSpritePosition(sf::Vector2f pos)
 {
 	mSprite.setPosition(pos);
 }
 
-void Piece::SetPosition(float x, float y)
+void Piece::SetSpritePosition(float x, float y)
 {
-	mSprite.setPosition(sf::Vector2f(x, y));
+	Piece::SetSpritePosition(sf::Vector2f(x, y));
 }
 
 sf::Vector2f Piece::GetPosition() 
