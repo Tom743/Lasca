@@ -1,6 +1,6 @@
 #include "Cell.h"
 
-Cell::Cell(float diameter, sf::Vector2f pos) : CircleShape(diameter/2)
+Cell::Cell(float diameter, sf::Vector2f pos, codes::CellID ID) : CircleShape(diameter/2), mID(ID)
 {
 	CircleShape::setPointCount(40);
 	CircleShape::setPosition(pos);
@@ -10,6 +10,8 @@ Cell::Cell(float diameter, sf::Vector2f pos) : CircleShape(diameter/2)
 	CircleShape::setOutlineColor(sf::Color(36, 28, 24));
 	CircleShape::setOutlineThickness(3);
 };
+
+codes::CellID Cell::GetID() {return mID;}
 
 Cell::~Cell()
 {

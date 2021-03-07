@@ -18,10 +18,22 @@ public:
 	void SetSpritePosition(float x, float y);
 	// Get the position of the sprite
 	sf::Vector2f GetPosition();
+	// Get the cell where this piece is
+	codes::CellID GetCellID();
+
+	bool GetColor();
 
 private:
 	sf::Sprite mSprite;
 	sf::Texture mTexture;
+
+	bool mColor;
+
+	// The cell where this piece is
+	codes::CellID mCellID = codes::CellID(0, 0);
+
+	// Set the cell where this piece is
+	void SetCellID(codes::CellID ID);
 
 	// Load the correct texture and scale to the correct size
 	void LoadTexture(bool color, float cellSize);

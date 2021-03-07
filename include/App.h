@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include "Codes.h"
 #include "GameState.h"
 
 class App {

@@ -1,15 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include "Piece.h"
-#include "Codes.h"
 
-Piece::Piece(bool color, Cell* cell)
+Piece::Piece(bool color, Cell* cell) : mColor(color)
 {
 	LoadTexture(color, cell->getRadius()*2);
 	AttachToCell(cell);
 }
 
 
-Piece::Piece(bool color, float cellSize, sf::Vector2f pos)
+Piece::Piece(bool color, float cellSize, sf::Vector2f pos) : mColor(color)
 {
 	LoadTexture(color, cellSize);
 	SetSpritePosition(pos);
@@ -18,6 +17,11 @@ Piece::Piece(bool color, float cellSize, sf::Vector2f pos)
 sf::Sprite Piece::GetSprite() 
 {
 	return mSprite;
+}
+
+bool Piece::GetColor()
+{
+	return mColor;
 }
 
 void Piece::AttachToCell(Cell* cell) 
@@ -34,12 +38,24 @@ void Piece::AttachToCell(Cell* cell)
 	piecePos.y+=(cellSize-size.y)/2;
 	SetSpritePosition(piecePos);
 
+	SetCellID(codes::CellID(cell->GetID()));
 }
+
+codes::CellID Piece::GetCellID()
+{
+	return mCellID;
+}
+
+void Piece::SetCellID(codes::CellID ID)
+{
+	mCellID = ID;
+}
+
 
 void Piece::LoadTexture(bool color, float cellSize)
 {
 	// Texture settings
-    mTexture.loadFromFile(color ? "res/BlackChecker.png" : "res/WhiteChecker.png");
+    mTexture.loadFromFile(color==codes::Colors::Black ? "res/BlackChecker.png" : "res/WhiteChecker.png");
 	mTexture.setSmooth(true);
 
 	// Scale

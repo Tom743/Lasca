@@ -21,6 +21,8 @@ public:
 	sf::Color getBackGroudColor();
 
 private:
+	bool CheckLegalMove(codes::CellID cellID, codes::CellID pCellID, bool color);
+
 	// Drawables of the game
 	std::vector<Cell*> mBoardCells;
 	std::vector<Piece*> mPieces;
