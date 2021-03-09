@@ -62,7 +62,7 @@ void App::GameLoop()
 		if (quit) mWindow->close();
 
 		// Clear the screen
-		mWindow->clear(mMainState.getBackGroudColor());
+		mWindow->clear(mMainState.getBackGroundColor());
 
 		// Let the current game state draw its things
 		mMainState.Draw();

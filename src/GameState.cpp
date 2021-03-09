@@ -24,7 +24,7 @@ void GameState::Init(sf::RenderWindow* window)
 			sf::Vector2f pos = sf::Vector2f(j*mCellSize*2+(i%2)*mCellSize, i*mCellSize);
 			Cell* cell = new Cell(mCellSize, pos, codes::CellID(7-(j*2+i%2), 7-i));
 			mBoardCells.push_back(cell);
-			if (i!=3) mPieces.push_back(new Piece(i<3, cell));
+			if (i!=3) cell->PushPiece(new Piece(i<3, cell));
 		}
 	}
 }
@@ -34,7 +34,7 @@ bool GameState::ProcessInput()
 	// Temporary variables for drag and drop functionality
 	static sf::Vector2f offset;
 	static sf::Vector2f oldPos, newPos;
-	static Piece* movingPiece;
+	static Cell* movingTowerCell; // The cell that owns the currently moving tower
 
 	// Position of the mouse at this iteration of the game loop
 	sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(*gWindow));
@@ -46,77 +46,101 @@ bool GameState::ProcessInput()
 		// Close button was clicked
 		if (event.type == sf::Event::Closed) return true;
 
-		// Mouse events
+		// Mouse pressed events
 		else if (event.type == sf::Event::MouseButtonPressed)
 		{
-			// Left mouse button events
+			// Left mouse button pressed
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				// If the user user is trying to move a piece move it
-				for (Piece* p : mPieces)
+				// If the user user is trying to move a piece grab it
+				for (Cell* c : mBoardCells)
 				{
-					if (p->GetSprite().getGlobalBounds().contains(mousePos))
+					if (c->getGlobalBounds().contains(mousePos))
 					{
-						oldPos = p->GetPosition();
+						oldPos = c->GetTop()->GetPosition();
 						offset = mousePos-oldPos;
-						movingPiece=p;
+						movingTowerCell = c;
 					}
 				}
 			}
 		}
+		// Mouse released events
 		else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			// If the user was moving a piece, drop it
-			if (event.mouseButton.button == sf::Mouse::Left && movingPiece!=nullptr)
+			if (event.mouseButton.button == sf::Mouse::Left && movingTowerCell!=nullptr)
 			{
-				bool success = false;  // If this is not an appropiate place, remains false to later return the piece to its original place
-				for (Cell* c : mBoardCells)  // Implment an ordered matrix search algorithm to speed this up unnecessarily
+				// If this is not an appropiate place to drop the piece, success
+				// remains false to later return the piece to its original place
+				bool success = false;  
+				// TODO Implement an ordered matrix search algorithm to speed 
+				// this up unnecessarily
+				for (Cell* c : mBoardCells) 
 				{
 					// Move to that cell if possible
 					if (c->getGlobalBounds().contains(mousePos))
 					{
-						if (CheckLegalMove(c->GetID(), movingPiece->GetCellID(), movingPiece->GetColor()))
+						if (CheckLegalMove(*movingTowerCell, *c))
 						{
-							movingPiece->AttachToCell(c);
-							movingPiece = nullptr;
-							success = true;
+							// If the tower can be moved here
+							if (c->PutTower(movingTowerCell->GetTower()))
+							{
+								// Move the pieces
+								for (Piece* p : movingTowerCell->GetTower())
+								{
+									p->AttachToCell(c);
+								}
+								movingTowerCell->CleanTower();
+								movingTowerCell = nullptr;
+								success = true;
+							}
 						}
 						break;
 					}
 				}
-				// Return it to the original place
+				// Return it to the original place 
+				// TODO animate this
 				if (!success)
 				{
-					movingPiece->SetSpritePosition(oldPos);
-					movingPiece = nullptr;
+					// TODO change for attachToCell
+					for (Piece* p : movingTowerCell->GetTower()) p->SetSpritePosition(oldPos);
+					movingTowerCell = nullptr;
 				}
 				       
 			}    
 		}
 
 		// If the user was moving a piece, keep it on the cursor
-		if (movingPiece!=nullptr) 
+		if (movingTowerCell!=nullptr) 
 		{
 			newPos = mousePos-offset;
-			movingPiece->SetSpritePosition(newPos);  
+			// TODO change for attachToCell
+			for (Piece* p : movingTowerCell->GetTower()) p->SetSpritePosition(newPos); 
 		}
 	}
 	return false;
 }
 
-bool GameState::CheckLegalMove(codes::CellID cellID, codes::CellID pCellID, bool color)
+// TODO
+bool GameState::CheckLegalMove(Cell& from, Cell& to)
 {
-	return cellID.y == pCellID.y+(color == codes::Colors::Black ? -1 : 1);
+	return true;//to.GetID().y == to.GetID().y+
+			//(from.GetTop()->GetColor() == codes::Colors::Black ? -1 : 1);
 }
 
+// FIXME it renders some pieces before some cells, so when dragging the piece may
+// appear behind the cells
 void GameState::Draw()
 {
 	// Draw everything
-	for (Cell* c : mBoardCells) gWindow->draw(*c);
-	for (Piece* p : mPieces) gWindow->draw(p->GetSprite());
+	for (Cell* c : mBoardCells) 
+	{
+		gWindow->draw(*c);
+		for (Piece* p : c->GetTower()) gWindow->draw(p->GetSprite());
+	}
 }
 
-sf::Color GameState::getBackGroudColor()
+sf::Color GameState::getBackGroundColor()
 {
 	return mBackgroundColor;
 }

@@ -18,18 +18,17 @@ public:
 	void Draw();
 
 	// Get the color that should fill the window on clear
-	sf::Color getBackGroudColor();
+	sf::Color getBackGroundColor();
 
 private:
-	bool CheckLegalMove(codes::CellID cellID, codes::CellID pCellID, bool color);
+	bool CheckLegalMove(Cell& from, Cell& to);
 
-	// Drawables of the game
+	// The cells of the board. Each cell contains its pieces
 	std::vector<Cell*> mBoardCells;
-	std::vector<Piece*> mPieces;
 
 	// Window and window configuration
 	sf::RenderWindow* gWindow;
 	sf::Color mBackgroundColor = sf::Color(56, 45, 39);
 	const int mFrameRateLimit = 60;
-	int mCellSize;
+	int mCellSize; // Defined by the size of the given window
 };
