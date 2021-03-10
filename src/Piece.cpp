@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Piece.h"
 
-// TODO make it independent from cell (apart from constructor, which could be 
-// made from parameters)
 // TODO each piece should have its own offset based on it position on the tower.
 // In that case, don't change this
 

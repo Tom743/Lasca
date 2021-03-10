@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include "App.h"
 
-/*
-TODO: Implement a statemanager and game states, move the input processing loop and draw functions 
-to each state and call them form the state manager
-*/
+
+// TODO: Implement a statemanager and game states, move the input processing loop and draw functions 
+//to each state and call them form the state manager
+
 
 
 App::App()

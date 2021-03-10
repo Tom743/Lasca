@@ -68,7 +68,8 @@ bool GameState::ProcessInput()
 		else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			// If the user was moving a piece, drop it
-			if (event.mouseButton.button == sf::Mouse::Left && movingTowerCell!=nullptr)
+			if (event.mouseButton.button == sf::Mouse::Left && 
+				movingTowerCell!=nullptr)
 			{
 				// If this is not an appropiate place to drop the piece, success
 				// remains false to later return the piece to its original place
@@ -102,8 +103,9 @@ bool GameState::ProcessInput()
 				// TODO animate this
 				if (!success)
 				{
-					// TODO change for attachToCell
-					for (Piece* p : movingTowerCell->GetTower()) p->SetSpritePosition(oldPos);
+					for (Piece* p : movingTowerCell->GetTower()) 
+						p->AttachToCell(movingTowerCell);
+					
 					movingTowerCell = nullptr;
 				}
 				       
@@ -114,8 +116,8 @@ bool GameState::ProcessInput()
 		if (movingTowerCell!=nullptr) 
 		{
 			newPos = mousePos-offset;
-			// TODO change for attachToCell
-			for (Piece* p : movingTowerCell->GetTower()) p->SetSpritePosition(newPos); 
+			for (Piece* p : movingTowerCell->GetTower())
+				p->SetSpritePosition(newPos); 
 		}
 	}
 	return false;
