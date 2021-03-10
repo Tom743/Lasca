@@ -25,6 +25,8 @@ private:
 
 	// The cells of the board. Each cell contains its pieces
 	std::vector<Cell*> mBoardCells;
+	// The cell that owns the currently moving tower of pieces. nullptr if not dragging
+	Cell* mMovingTowerCell;
 
 	// Window and window configuration
 	sf::RenderWindow* gWindow;
