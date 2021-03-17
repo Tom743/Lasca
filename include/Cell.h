@@ -34,7 +34,7 @@ private:
 	sf::Texture mTexture;
 
 	// ID that describes the location of the cell on the board
-	codes::CellID mID;  // TODO maybe not neccesary, delete if thats the case
+	codes::CellID mID;
 
 	// The tower of pieces on this cell. front() is the topmost piece
 	std::deque<Piece*> mTower;

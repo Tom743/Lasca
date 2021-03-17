@@ -27,6 +27,12 @@ bool Piece::GetColor()
 	return mColor;
 }
 
+void Piece::SetKing()
+{
+	mIsKing = true;
+	// TODO change texture to something that indicates it is a king
+}
+
 void Piece::AttachToCell(Cell* cell) 
 {
 	sf::Vector2f cellPos = cell->getPosition();

@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "Piece.h"
+#include "Mover.h"
 
 class Cell;
 
@@ -21,16 +21,17 @@ public:
 	sf::Color getBackGroundColor();
 
 private:
-	bool CheckLegalMove(Cell& from, Cell& to);
-
-	// The cells of the board. Each cell contains its pieces
-	std::vector<Cell*> mBoardCells;
+	// Contains all the cell of the board. Each cell will contain its pieces
+	Board mBoardCells = Board();
 	// The cell that owns the currently moving tower of pieces. nullptr if not dragging
 	Cell* mMovingTowerCell;
+
+	// Move validator
+	Mover mMoveValidator = Mover();
 
 	// Window and window configuration
 	sf::RenderWindow* gWindow;
 	sf::Color mBackgroundColor = sf::Color(56, 45, 39);
-	const int mFrameRateLimit = 60;
-	int mCellSize; // Defined by the size of the given window
+	const int mFrameRateLimit = 60; // This state's frame rate limit
+	int mCellSize; // Size of the cell in pixels. Defined by the size of the given window
 };

@@ -1,8 +1,10 @@
 #include "GameState.h"
+#include "Piece.h"
 
 // For debugging
 #include "iostream" // TODO learn how to debug
 
+// TODO someday: hover mouse over a tower and lift some pieces to reveal if there is a king
 
 GameState::GameState()
 {
@@ -17,20 +19,11 @@ GameState::~GameState()
 void GameState::Init(sf::RenderWindow* window)
 {
 	gWindow = window;
-	gWindow->setFramerateLimit(mFrameRateLimit); // This state's frame rate limit
-
+	gWindow->setFramerateLimit(mFrameRateLimit);
 
 	mCellSize = std::min(gWindow->getSize().x, gWindow->getSize().y)/7;
 
-	// Initiate the board
-	for (int i=0; i<7; i++) {
-		for (int j=0; j<3+!(i%2); j++) {
-			sf::Vector2f pos = sf::Vector2f(j*mCellSize*2+(i%2)*mCellSize, i*mCellSize);
-			Cell* cell = new Cell(mCellSize, pos, codes::CellID(7-(j*2+i%2), 7-i));
-			mBoardCells.push_back(cell);
-			if (i!=3) cell->PushPiece(new Piece(i<3, cell));
-		}
-	}
+	mBoardCells.Init(mCellSize);
 }
 
 bool GameState::ProcessInput()
@@ -56,7 +49,7 @@ bool GameState::ProcessInput()
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
 				// If the user user is trying to move a piece grab it
-				for (Cell* c : mBoardCells)
+				for (std::vector<Cell*> r : mBoardCells.GetCells()) for (Cell* c : r)
 				{
 					if (c->getGlobalBounds().contains(mousePos))
 					{
@@ -79,12 +72,12 @@ bool GameState::ProcessInput()
 				bool success = false;  
 				// TODO Implement an ordered matrix search algorithm to speed 
 				// this up unnecessarily
-				for (Cell* c : mBoardCells) 
+				for (std::vector<Cell*> r : mBoardCells.GetCells()) for (Cell* c : r)
 				{
 					// Move to that cell if possible
 					if (c->getGlobalBounds().contains(mousePos))
 					{
-						if (CheckLegalMove(*mMovingTowerCell, *c))
+						if (mMoveValidator.ValidateMove(*mMovingTowerCell, *c, mBoardCells))
 						{
 							// Move the pieces
 							for (Piece* p : mMovingTowerCell->GetTower())
@@ -122,24 +115,16 @@ bool GameState::ProcessInput()
 	return false;
 }
 
-// TODO
-bool GameState::CheckLegalMove(Cell& from, Cell& to)
-{
-	// There already are some pieces
-	if (!to.GetTower().empty()) return false;
-
-	return to.GetID().y == from.GetID().y+(from.GetTop()->GetColor() == codes::Colors::Black ? -2 : 2);		
-}
-
 void GameState::Draw()
 {
 	// Draw Board
-	for (Cell* c : mBoardCells) 
+	for (std::vector<Cell*> r : mBoardCells.GetCells()) for (Cell* c : r)
 		gWindow->draw(*c);
 	// Draw Pieces
-	for (Cell* c : mBoardCells) 
+	for (std::vector<Cell*> r : mBoardCells.GetCells()) for (Cell* c : r)
 	{
-		if (c!=mMovingTowerCell)  // TODO test performance of this conditional
+		// TODO test performance of this conditional. If too bad, draw the tower anyways, and draw it again later
+		if (c!=mMovingTowerCell)  
 		{
 			for (Piece* p : c->GetTower()) 
 				gWindow->draw(p->GetSprite());
@@ -147,8 +132,11 @@ void GameState::Draw()
 	}
 	// Draw the moving tower on top of that 
 	if (mMovingTowerCell!=nullptr)
-		for (Piece* p : mMovingTowerCell->GetTower()) 
-			gWindow->draw(p->GetSprite());
+	{
+		std::deque<Piece*> tower = mMovingTowerCell->GetTower();
+		for (auto it = tower.rbegin(); it!=tower.rend(); ++it)
+			gWindow->draw((*it)->GetSprite());
+	}
 }
 
 sf::Color GameState::getBackGroundColor()

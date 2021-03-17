@@ -16,6 +16,9 @@ public:
 	// Set the position of the sprite
 	void SetSpritePosition(sf::Vector2f pos);
 	void SetSpritePosition(float x, float y);
+	// Make the piece a king
+	void SetKing();
+	bool IsKing() {return mIsKing;}
 	// Get the position of the sprite
 	sf::Vector2f GetPosition();
 	// Get the cell where this piece is
@@ -28,9 +31,10 @@ private:
 	sf::Texture mTexture;
 
 	bool mColor;
+	bool mIsKing = false;
 
 	// The cell where this piece is
-	codes::CellID mCellID = codes::CellID(0, 0);
+	codes::CellID mCellID = codes::CellID(0, 0); // TODO Is this neccesary?
 
 	// Set the cell where this piece is
 	void SetCellID(codes::CellID ID);
