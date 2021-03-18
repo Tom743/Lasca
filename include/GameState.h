@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Mover.h"
 
-class Cell;
-
 class GameState {
 public:
 	GameState();

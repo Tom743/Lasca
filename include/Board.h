@@ -1,6 +1,5 @@
 #include <vector>
-
-class Cell;
+#include "Piece.h"
 
 // The cells of the board. Each cell contains its pieces
 // Board.GetCells()[row][not column but index of cell in this row]
