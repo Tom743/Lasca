@@ -1,3 +1,5 @@
+#include "iostream"
+
 namespace codes {
 
 struct ExitStatus {
@@ -20,7 +22,7 @@ public:
 	int y;
 	CellID(int x, int y) : x(x), y(y)
 	{
-		if (x%2 != y%2)
+		if (x%2 != y%2 or x<0 or x>6 or y<0 or y>6)
 		{
 			throw "Invalid CellID";	
 		}

@@ -12,6 +12,8 @@ public:
 	void Init(int mCellSize);
 	// Get a 2D matrix array with all the cells
 	std::vector<std::vector<Cell*>> GetCells();
+	// Get a pointer to the cell using an ID.
+	Cell* GetCellByID(codes::CellID ID);
 private:
 	std::vector<std::vector<Cell*>> mBoardCells;
 };
