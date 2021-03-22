@@ -1,8 +1,5 @@
 #include "GameState.h"
 
-// For debugging
-#include "iostream" // TODO learn how to debug
-
 // TODO someday: hover mouse over a tower and lift some pieces to reveal if there is a king
 // TODO cleanups (unique pointers?)
 
