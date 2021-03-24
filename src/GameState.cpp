@@ -50,9 +50,13 @@ bool GameState::ProcessInput()
 				{
 					if (c->getGlobalBounds().contains(mousePos))
 					{
-						oldPos = c->GetTop()->GetPosition();
-						offset = mousePos-oldPos;
-						mMovingTowerCell = c;
+						if (c->GetTop() != nullptr)
+						{
+							oldPos = c->GetTop()->GetPosition();
+							offset = mousePos-oldPos;
+							mMovingTowerCell = c;
+						}
+						break;
 					}
 				}
 			}
