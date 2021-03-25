@@ -24,8 +24,8 @@ private:
 	// The cell that owns the currently moving tower of pieces. nullptr if not dragging
 	Cell* mMovingTowerCell;
 
-	// Move validator
-	Mover mMoveValidator = Mover();
+	// Move validator and performer
+	Mover mMover = Mover();
 
 	// Window and window configuration
 	sf::RenderWindow* gWindow;

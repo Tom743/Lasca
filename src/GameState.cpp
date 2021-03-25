@@ -78,15 +78,11 @@ bool GameState::ProcessInput()
 					// Move to that cell if possible
 					if (c->getGlobalBounds().contains(mousePos))
 					{
-						if (mMoveValidator.ValidateMove(*mMovingTowerCell, *c, mBoardCells))
+						// If valid, move will be performed and the turn goes to the other player
+						// Otherwise, try again
+						if (mMover.ValidateAndMove(*mMovingTowerCell, *c, mBoardCells))
 						{
-							// Move the pieces
-							for (Piece* p : mMovingTowerCell->GetTower())
-								p->AttachToCell(c);
-
-							c->PutTower(mMovingTowerCell->GetTower());
-							mMovingTowerCell->CleanTower();
-							mMovingTowerCell = nullptr;
+							mMovingTowerCell=nullptr;
 							success = true;
 						}
 						break;
