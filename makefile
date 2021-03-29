@@ -7,9 +7,8 @@ OBJ_DIR := obj
 INLCUDE_DIR := include
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
-# TODO make with debug flags only on debugging
-CPPFLAGS := -g -Wall -I$(INLCUDE_DIR)
-CXXFLAGS := -g -lsfml-graphics -lsfml-window -lsfml-system
+CPPFLAGS := -Wall -I$(INLCUDE_DIR)
+CXXFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
 
 # TODO Windows version not tested
 ifeq ($(UNAME), Windows_NT)
@@ -23,6 +22,11 @@ $(TARGET): $(OBJ_FILES)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CPPFLAGS) -c -o $@ $< $(CXXFLAGS) 
+
+debug: CXXFLAGS += -g
+debug: CPPFLAGS += -g
+debug: clean
+debug: $(TARGET)
 
 clean:
 	rm -fv $(OBJ_FILES) $(TARGET)
