@@ -21,6 +21,9 @@ public:
 	// Pushes a piece to the bottom of the tower
 	void PushPiece(Piece* piece);
 
+	// Removes the top piece of the tower and returns it
+	Piece* PopPiece();
+
 	// Deletes every piece on the tower
 	void CleanTower();
 

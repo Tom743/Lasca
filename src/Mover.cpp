@@ -6,23 +6,7 @@ Mover::Mover() {
     
 }
 
-bool Mover::ValidateAndMove(Cell& from, Cell& to, Board& board)
-{
-	if (ValidateMove(from, to, board))
-	{
-		// Move the pieces to their new place
-		for (Piece* p : from.GetTower())
-			p->AttachToCell(&to); // TODO put the attach to cell thing into puttower?
-
-		to.PutTower(from.GetTower());
-		from.CleanTower();
-
-		return true;
-	}
-	return false;
-}
-
-bool Mover::ValidateMove(Cell& from, Cell& to, Board& board)
+bool Mover::ValidateMove(Cell& from, Cell& to, Board& board, bool move)
 {
 	// Color of the moving tower
 	bool color = from.GetTop()->GetColor();
@@ -52,12 +36,37 @@ bool Mover::ValidateMove(Cell& from, Cell& to, Board& board)
 			{
 				// Is it trying to move without taking
 				if (AreAnyTakesAvailable(color, board)) return false;
-				else return true;
+				else {
+					if (move)
+					{
+						// TODO make this a function
+						// Move the pieces to their new place
+						to.PutTower(from.GetTower());
+						from.CleanTower();
+						for (Piece* p : from.GetTower())
+							p->AttachToCell(&to); // TODO put the attach to cell thing into puttower?
+
+					}
+					return true;
+				}
 			}
 			// Is it trying to take a piece of the same color?
 			else if (board.GetCellByID(CellID((from.GetID().x+to.GetID().x)/2, (from.GetID().y+to.GetID().y)/2))
 					->GetTop()->GetColor() == color) return false;
 		}
+	}
+
+	// If we got here it means it is legal and we take
+	if (move)
+	{
+		// Move the pieces to their new place
+		Cell* takenCell = board.GetCellByID(CellID((from.GetID().x+to.GetID().x)/2, (from.GetID().y+to.GetID().y)/2));
+		from.PushPiece(takenCell->PopPiece());
+		to.PutTower(from.GetTower());
+		from.CleanTower();
+		for (Piece* p : to.GetTower())
+			p->AttachToCell(&to); // TODO put the attach to cell thing into puttower?
+
 	}
 	return true;
 }

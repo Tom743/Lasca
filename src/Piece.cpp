@@ -45,6 +45,13 @@ void Piece::AttachToCell(Cell* cell)
 	sf::Vector2f piecePos = cellPos;
 	piecePos.x+=(cellSize-size.x)/2;
 	piecePos.y+=(cellSize-size.y)/2;
+
+	std::deque<Piece*> tower = cell->GetTower();
+	for (auto i = tower.rbegin(); i!=tower.rend(); ++i)
+	{
+		if (*i==this) break;
+		piecePos.y-=cell->getRadius()/2.5;
+	}
 	SetSpritePosition(piecePos);
 
 	SetCellID(codes::CellID(cell->GetID()));

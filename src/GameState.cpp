@@ -80,7 +80,7 @@ bool GameState::ProcessInput()
 					{
 						// If valid, move will be performed and the turn goes to the other player
 						// Otherwise, try again
-						if (mMover.ValidateAndMove(*mMovingTowerCell, *c, mBoardCells))
+						if (mMover.ValidateMove(*mMovingTowerCell, *c, mBoardCells, true))
 						{
 							mMovingTowerCell=nullptr;
 							success = true;
@@ -123,8 +123,9 @@ void GameState::Draw()
 		// TODO test performance of this conditional. If too bad, draw the tower anyways, and draw it again later
 		if (c!=mMovingTowerCell)  
 		{
-			for (Piece* p : c->GetTower()) 
-				gWindow->draw(p->GetSprite());
+			std::deque<Piece*> tower = c->GetTower();
+			for (auto p=tower.rbegin(); p!=tower.rend(); ++p) // TODO would be better if this went always form top to bottom
+				gWindow->draw((*p)->GetSprite());
 		}
 	}
 	// Draw the moving tower on top of that 

@@ -34,6 +34,13 @@ void Cell::PushPiece(Piece* piece)
 	mTower.push_back(piece);
 }
 
+Piece* Cell::PopPiece()
+{
+	Piece* p = GetTop();
+	mTower.pop_front();
+	return p;
+}
+
 std::deque<Piece*> Cell::GetTower()
 {
 	return mTower;
