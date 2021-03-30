@@ -23,9 +23,9 @@ $(TARGET): $(OBJ_FILES)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CPPFLAGS) -c -o $@ $< $(CXXFLAGS) 
 
+# make clean before compiling for debug if the last try wasn't debug
 debug: CXXFLAGS += -g
 debug: CPPFLAGS += -g
-debug: clean
 debug: $(TARGET)
 
 clean:
