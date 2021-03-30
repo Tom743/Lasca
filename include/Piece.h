@@ -13,7 +13,7 @@ public:
 	sf::Sprite GetSprite();
 	// Move the sprite centered to a cell
 	void AttachToCell(Cell* cell);
-	// Set the position of the sprite
+	// Set the position of the sprite. mOffset will be added to the given position
 	void SetSpritePosition(sf::Vector2f pos);
 	void SetSpritePosition(float x, float y);
 	// Make the piece a king
@@ -38,6 +38,8 @@ private:
 
 	// Set the cell where this piece is
 	void SetCellID(codes::CellID ID);
+
+	sf::Vector2f mOffset = sf::Vector2f(0, 0);
 
 	// Load the correct texture and scale to the correct size
 	void LoadTexture(bool color, float cellSize);

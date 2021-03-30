@@ -52,7 +52,7 @@ bool GameState::ProcessInput()
 					{
 						if (c->GetTop() != nullptr)
 						{
-							oldPos = c->GetTop()->GetPosition();
+							oldPos = c->GetBottom()->GetPosition();
 							offset = mousePos-oldPos;
 							mMovingTowerCell = c;
 						}

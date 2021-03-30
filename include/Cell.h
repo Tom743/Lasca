@@ -14,6 +14,9 @@ public:
 	// pieces
 	Piece* GetTop();
 
+	// Returns the piece on the bottom of the tower
+	Piece* GetBottom();
+
 	// If the tower is empty is replaced with the given tower and returns true. 
 	// Returns false otherwise
 	bool PutTower(std::deque<Piece*> newTower);

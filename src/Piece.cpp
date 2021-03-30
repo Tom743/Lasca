@@ -47,10 +47,11 @@ void Piece::AttachToCell(Cell* cell)
 	piecePos.y+=(cellSize-size.y)/2;
 
 	std::deque<Piece*> tower = cell->GetTower();
+	mOffset.y = 0;
 	for (auto i = tower.rbegin(); i!=tower.rend(); ++i)
 	{
 		if (*i==this) break;
-		piecePos.y-=cell->getRadius()/2.5;
+		mOffset.y-=cell->getRadius()/2.5;
 	}
 	SetSpritePosition(piecePos);
 
@@ -83,7 +84,7 @@ void Piece::LoadTexture(bool color, float cellSize)
 
 void Piece::SetSpritePosition(sf::Vector2f pos)
 {
-	mSprite.setPosition(pos);
+	mSprite.setPosition(pos+mOffset);
 }
 
 void Piece::SetSpritePosition(float x, float y)

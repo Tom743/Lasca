@@ -16,6 +16,11 @@ Piece* Cell::GetTop()
 	return mTower.front();
 }
 
+Piece* Cell::GetBottom()
+{
+	return mTower.back();
+}
+
 bool Cell::PutTower(std::deque<Piece*> newTower)
 {
 	if (!mTower.empty()) return false;
