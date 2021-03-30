@@ -11,4 +11,7 @@ private:
 	bool AreDiagonal(Cell& c1, Cell&c2);
 	// Checks if it is possible for the player to capture an enemy tower
 	bool AreAnyTakesAvailable(bool color, Board& board);
+	// Moves a tower to another cell and takes the top piece of another cell if given
+	// Does not take into account rules, it only moves pieces around
+	void Move(Cell* to, Cell* from, Cell* taken = nullptr);
 };

@@ -37,16 +37,7 @@ bool Mover::ValidateMove(Cell& from, Cell& to, Board& board, bool move)
 				// Is it trying to move without taking
 				if (AreAnyTakesAvailable(color, board)) return false;
 				else {
-					if (move)
-					{
-						// TODO make this a function
-						// Move the pieces to their new place
-						to.PutTower(from.GetTower());
-						from.CleanTower();
-						for (Piece* p : from.GetTower())
-							p->AttachToCell(&to); // TODO put the attach to cell thing into puttower?
-
-					}
+					if (move) Move(&to, &from);
 					return true;
 				}
 			}
@@ -59,16 +50,20 @@ bool Mover::ValidateMove(Cell& from, Cell& to, Board& board, bool move)
 	// If we got here it means it is legal and we take
 	if (move)
 	{
-		// Move the pieces to their new place
 		Cell* takenCell = board.GetCellByID(CellID((from.GetID().x+to.GetID().x)/2, (from.GetID().y+to.GetID().y)/2));
-		from.PushPiece(takenCell->PopPiece());
-		to.PutTower(from.GetTower());
-		from.CleanTower();
-		for (Piece* p : to.GetTower())
-			p->AttachToCell(&to); // TODO put the attach to cell thing into puttower?
-
+		Move(&to, &from, takenCell);
 	}
 	return true;
+}
+
+void Mover::Move(Cell* to, Cell* from, Cell* taken)
+{
+	// Move the pieces to their new place
+	if (taken!=nullptr) from->PushPiece(taken->PopPiece());
+	to->PutTower(from->GetTower());
+	from->CleanTower();
+	for (Piece* p : to->GetTower())
+		p->AttachToCell(to); // TODO put the attach to cell thing into puttower?
 }
 
 bool Mover::AreAnyTakesAvailable(bool color, Board& board)
