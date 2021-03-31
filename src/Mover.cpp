@@ -64,6 +64,10 @@ void Mover::Move(Cell* to, Cell* from, Cell* taken)
 	from->CleanTower();
 	for (Piece* p : to->GetTower())
 		p->AttachToCell(to); // TODO put the attach to cell thing into puttower?
+
+	// Make the tower a king if reaches the back rank
+	if (to->GetID().y == (to->GetTop()->GetColor()==codes::Colors::Black ? 0 : 6))
+		to->GetTop()->SetKing();
 }
 
 bool Mover::AreAnyTakesAvailable(bool color, Board& board)

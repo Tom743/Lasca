@@ -6,14 +6,15 @@
 
 Piece::Piece(bool color, Cell* cell) : mColor(color)
 {
-	LoadTexture(color, cell->getRadius()*2);
+	gCellSize = cell->getRadius()*2;
+	LoadTexture();
 	AttachToCell(cell);
 }
 
 
-Piece::Piece(bool color, float cellSize, sf::Vector2f pos) : mColor(color)
+Piece::Piece(bool color, float cellSize, sf::Vector2f pos) : mColor(color), gCellSize(cellSize)
 {
-	LoadTexture(color, cellSize);
+	LoadTexture();
 	SetSpritePosition(pos);
 }
 
@@ -30,7 +31,7 @@ bool Piece::GetColor()
 void Piece::SetKing()
 {
 	mIsKing = true;
-	// TODO change texture to something that indicates it is a king
+	LoadTexture(true);
 }
 
 void Piece::AttachToCell(Cell* cell) 
@@ -69,15 +70,19 @@ void Piece::SetCellID(codes::CellID ID)
 }
 
 
-void Piece::LoadTexture(bool color, float cellSize)
+void Piece::LoadTexture(bool king)
 {
 	// Texture settings
-    mTexture.loadFromFile(color==codes::Colors::Black ? "res/BlackChecker.png" : "res/WhiteChecker.png");
+	// TODO move hardcoded strings into a resource file
+	if (king)
+	    mTexture.loadFromFile(mColor==codes::Colors::Black ? "res/BlackCheckerKing.png" : "res/WhiteCheckerKing.png");
+	else
+    	mTexture.loadFromFile(mColor==codes::Colors::Black ? "res/BlackChecker.png" : "res/WhiteChecker.png");
 	mTexture.setSmooth(true);
 
 	// Scale
 	sf::Vector2u textureSize = mTexture.getSize();
-	float scaleFactor = (cellSize-10) / std::max(textureSize.x, textureSize.y);
+	float scaleFactor = (gCellSize-10) / std::max(textureSize.x, textureSize.y);
 	mSprite.setTexture(mTexture);
 	mSprite.setScale(scaleFactor, scaleFactor);
 }

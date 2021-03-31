@@ -33,6 +33,9 @@ private:
 	bool mColor;
 	bool mIsKing = false;
 
+	// Size of the cells of the board, given on the constructors
+	float gCellSize;
+
 	// The cell where this piece is
 	codes::CellID mCellID = codes::CellID(0, 0); // TODO Is this neccesary?
 
@@ -42,5 +45,5 @@ private:
 	sf::Vector2f mOffset = sf::Vector2f(0, 0);
 
 	// Load the correct texture and scale to the correct size
-	void LoadTexture(bool color, float cellSize);
+	void LoadTexture(bool king = false);
 };

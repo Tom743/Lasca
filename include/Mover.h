@@ -12,6 +12,6 @@ private:
 	// Checks if it is possible for the player to capture an enemy tower
 	bool AreAnyTakesAvailable(bool color, Board& board);
 	// Moves a tower to another cell and takes the top piece of another cell if given
-	// Does not take into account rules, it only moves pieces around
+	// Does not take into account rules, it only moves pieces around and makes king if a piece reaches the back rank
 	void Move(Cell* to, Cell* from, Cell* taken = nullptr);
 };
