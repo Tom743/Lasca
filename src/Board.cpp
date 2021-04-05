@@ -20,8 +20,8 @@ void Board::Init(int mCellSize)
 
 Cell* Board::GetCellByID(codes::CellID ID)
 {
-	int x = (ID.x-(ID.y%2))/2;
-	int y = ID.y;
+	int x = (ID.x()-(ID.y()%2))/2;
+	int y = ID.y();
 	return mBoardCells[y][x];
 }
 

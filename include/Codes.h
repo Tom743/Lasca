@@ -16,22 +16,43 @@ struct Colors {
 
 class CellID
 {
+private:
+	int X;
+	int Y;
 public:
-	// TODO these should be const
-	int x;
-	int y;
-	CellID(int x, int y) : x(x), y(y)
+	CellID(const int _x, const int _y)
 	{
-		if (x%2 != y%2 or x<0 or x>6 or y<0 or y>6)
-		{
-			throw "Invalid CellID";	
-		}
+		// Sets the variables to be able to compare them on setY() and setX()
+		X=_x;
+		Y=_y;
+		setY(_y);
+		setX(_x);
 	}
 	CellID& operator=(CellID other)
     {
-        std::swap(x, other.x);
-        std::swap(y, other.y);
+        std::swap(X, other.X);
+        std::swap(Y, other.Y);
         return *this;
     }
+	int y() {return Y;}
+	int x() {return X;}
+	void setX(const int _x)
+	{
+		if (_x%2 != Y%2 or _x<0 or _x>6)
+		{
+			throw "Invalid CellID";	
+		} else {
+			X = _x;
+		}
+	}
+	void setY(const int _y)
+	{
+		if (X%2 != _y%2 or _y<0 or _y>6)
+		{
+			throw "Invalid CellID";	
+		} else {
+			Y = _y;
+		}
+	}
 };
 }
