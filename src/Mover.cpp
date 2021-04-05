@@ -79,7 +79,8 @@ bool Mover::AreAnyTakesAvailable(bool color, Board& board)
 		// TODO What if I store the number of pieces of each player to reduce the length of this loop?
 		if (c->GetTop()) if (c->GetTop()->GetColor()==color)
 		{
-			int captureRow = c->GetID().y + (color==Colors::Black ? -1 : 1); // Row where the capture may occur
+			int advance = color==Colors::Black ? -1 : 1; // The direction towards which the piece advances
+			int captureRow = c->GetID().y + advance; // Row where the capture may occur
 			if (1 <= captureRow and captureRow <= 5) // Can't land outside the board when capturing
 			{
 				int cCol = c->GetID().x; // Column where the tower that might be able to capture is before moving
@@ -88,7 +89,7 @@ bool Mover::AreAnyTakesAvailable(bool color, Board& board)
 				if (cCol<5) // Can't land outside the board when capturing
 				{
 					// If the piece where the capture may land is empty
-					if (board.GetCellByID(CellID(cCol+2, captureRow+(color==Colors::Black ? -1 : 1)))->GetTop() == nullptr)
+					if (board.GetCellByID(CellID(cCol+2, captureRow+advance))->GetTop() == nullptr)
 					{
 						// Piece to be captured
 						Piece* plusoneTop = board.GetCellByID(CellID(cCol+1, captureRow))->GetTop();
@@ -102,9 +103,11 @@ bool Mover::AreAnyTakesAvailable(bool color, Board& board)
 				// Theoretical capture on diagonal to the left (from white's perspective)
 				if (cCol>1) // Can't land outside the board when capturing
 				{
-					if (board.GetCellByID(CellID(cCol-2, captureRow+(color==Colors::Black ? -1 : 1)))->GetTop() == nullptr)
+					if (board.GetCellByID(CellID(cCol-2, captureRow+advance))->GetTop() == nullptr)
 					{
-						Piece* minusoneTop = board.GetCellByID(CellID(cCol-1, captureRow))->GetTop();
+						Cell* minusone = board.GetCellByID(CellID(cCol-1, captureRow));
+						Piece* minusoneTop = minusone->GetTop();
+						bool m = minusoneTop == nullptr;
 						if (minusoneTop != nullptr) if (minusoneTop->GetColor() != color) 
 							return true;
 					}

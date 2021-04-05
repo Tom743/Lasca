@@ -13,11 +13,13 @@ Cell::Cell(float diameter, sf::Vector2f pos, codes::CellID ID) : CircleShape(dia
 
 Piece* Cell::GetTop()
 {
+	if (mTower.empty()) return nullptr;
 	return mTower.front();
 }
 
 Piece* Cell::GetBottom()
 {
+	if (mTower.empty()) return nullptr;
 	return mTower.back();
 }
 
@@ -41,6 +43,7 @@ void Cell::PushPiece(Piece* piece)
 
 Piece* Cell::PopPiece()
 {
+	if (mTower.empty()) return nullptr;
 	Piece* p = GetTop();
 	mTower.pop_front();
 	return p;

@@ -10,11 +10,10 @@ public:
 	Cell(float diameter, sf::Vector2f pos, codes::CellID ID);
 	~Cell();
 
-	// Returns the topmost piece of this tower, or NULL if it doesn't have any
-	// pieces
+	// Returns the topmost piece of this tower, or nullptr if it doesn't have any pieces
 	Piece* GetTop();
 
-	// Returns the piece on the bottom of the tower
+	// Returns the piece on the bottom of the tower, or nullptr if it doesn't have any pieces
 	Piece* GetBottom();
 
 	// If the tower is empty is replaced with the given tower and returns true. 
@@ -24,7 +23,7 @@ public:
 	// Pushes a piece to the bottom of the tower
 	void PushPiece(Piece* piece);
 
-	// Removes the top piece of the tower and returns it
+	// Removes the top piece of the tower and returns it. nullptr if empty.
 	Piece* PopPiece();
 
 	// Deletes every piece on the tower
