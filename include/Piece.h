@@ -37,7 +37,7 @@ private:
 	float gCellSize;
 
 	// The cell where this piece is
-	codes::CellID mCellID = codes::CellID(0, 0); // TODO Is this neccesary?
+	codes::CellID mCellID = codes::CellID(0, 0);
 
 	// Set the cell where this piece is
 	void SetCellID(codes::CellID ID);
