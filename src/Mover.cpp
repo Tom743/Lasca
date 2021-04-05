@@ -105,9 +105,7 @@ bool Mover::AreAnyTakesAvailable(bool color, Board& board)
 				{
 					if (board.GetCellByID(CellID(cCol-2, captureRow+advance))->GetTop() == nullptr)
 					{
-						Cell* minusone = board.GetCellByID(CellID(cCol-1, captureRow));
-						Piece* minusoneTop = minusone->GetTop();
-						bool m = minusoneTop == nullptr;
+						Piece* minusoneTop = board.GetCellByID(CellID(cCol-1, captureRow))->GetTop();
 						if (minusoneTop != nullptr) if (minusoneTop->GetColor() != color) 
 							return true;
 					}
