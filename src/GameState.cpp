@@ -124,7 +124,7 @@ void GameState::Draw()
 		if (c!=mMovingTowerCell)  
 		{
 			std::deque<Piece*> tower = c->GetTower();
-			for (auto p=tower.rbegin(); p!=tower.rend(); ++p) // TODO would be better if this went always form top to bottom
+			for (auto p=tower.rbegin(); p!=tower.rend(); ++p) // TODO would be better if this went always from top to bottom
 				gWindow->draw((*p)->GetSprite());
 		}
 	}

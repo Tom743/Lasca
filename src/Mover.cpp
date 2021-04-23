@@ -72,45 +72,50 @@ void Mover::Move(Cell* to, Cell* from, Cell* taken)
 
 bool Mover::AreAnyTakesAvailable(bool color, Board& board)
 {
-	// TODO kings
 	for (std::vector<Cell*> r : board.GetCells()) for (Cell* c : r)
 	{
-		// Check if this piece can capture
 		// TODO What if I store the number of pieces of each player to reduce the length of this loop?
 		if (c->GetTop()) if (c->GetTop()->GetColor()==color)
 		{
-			int advance = color==Colors::Black ? -1 : 1; // The direction towards which the piece advances
-			int captureRow = c->GetID().y() + advance; // Row where the capture may occur
-			if (1 <= captureRow and captureRow <= 5) // Can't land outside the board when capturing
+			// Check if this piece can capture
+			CellID position = c->GetID();
+			Piece* piece = c->GetTop();
+			bool isKing = piece->IsKing();
+
+			int i = 0, ii = 3;
+			if (!isKing)
 			{
-				int cCol = c->GetID().x(); // Column where the tower that might be able to capture is before moving
-
-				// Theoretical capture on diagonal to the right (from white's perspective)
-				if (cCol<5) // Can't land outside the board when capturing
-				{
-					// If the piece where the capture may land is empty
-					if (board.GetCellByID(CellID(cCol+2, captureRow+advance))->GetTop() == nullptr)
-					{
-						// Piece to be captured
-						Piece* plusoneTop = board.GetCellByID(CellID(cCol+1, captureRow))->GetTop();
-
-						// If there is something to capture and is an enemy
-						if (plusoneTop != nullptr) if (plusoneTop->GetColor() != color)
-							return true;
-					}
-				}
-
-				// Theoretical capture on diagonal to the left (from white's perspective)
-				if (cCol>1) // Can't land outside the board when capturing
-				{
-					if (board.GetCellByID(CellID(cCol-2, captureRow+advance))->GetTop() == nullptr)
-					{
-						Piece* minusoneTop = board.GetCellByID(CellID(cCol-1, captureRow))->GetTop();
-						if (minusoneTop != nullptr) if (minusoneTop->GetColor() != color) 
-							return true;
-					}
-				}
+				// Limit Y movement for its color 
+				if (color == Colors::White) i=2;
+				else ii=1;
 			}
+			for (; i<=ii; i++)
+			{
+				int x_dir =      (i&1) == 0 ? -1 : 1; // LSB of 0 to 3 represents x direction, -1 or 1
+				int y_dir = ((i&2)>>1) == 0 ? -1 : 1; // MSB is y
+				int x_now = position.x()+x_dir;
+				int y_now = position.y()+y_dir;
+
+				// Iterate over the diagonal
+				while (1 <= x_now and 1 <= y_now and 5 >= x_now and 5 >= y_now)
+				{
+					if (board.GetCellByID(CellID(x_now, y_now))->GetTop()) // If is not empty, there might be an enemy
+					{
+						if (board.GetCellByID(CellID(x_now, y_now))->GetTop()->GetColor() == color) break; // Can't jump over a friend
+						else { // It is an enemy
+							// May be possible to jump over this one
+							x_now = x_now + x_dir;
+							y_now = y_now + y_dir;
+
+							if (board.GetCellByID(CellID(x_now, y_now))->GetTop() == nullptr) return true; // Is empty, can take
+							else break;
+						}
+					}
+					if (!isKing) break; // Only kings move before taking 
+					x_now = x_now + x_dir;
+					y_now = y_now + y_dir;
+				}
+			}			
 		}
 	}
 	return false;

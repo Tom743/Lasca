@@ -45,7 +45,7 @@ void App::InitRenderer()
 	// TODO get settings from config file
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
-	mWindow = new sf::RenderWindow(sf::VideoMode(700, 700), "Lasca", sf::Style::Titlebar | sf::Style::Close, settings);
+	mWindow = new sf::RenderWindow(sf::VideoMode(850, 850), "Lasca", sf::Style::Titlebar | sf::Style::Close, settings);
 	mWindow->setPosition(sf::Vector2i(10, 50));
 	mWindow->setFramerateLimit(30);  // Initial framerate. Can be changed by the states
 }
