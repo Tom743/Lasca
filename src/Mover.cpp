@@ -15,36 +15,66 @@ bool Mover::ValidateMove(Cell& from, Cell& to, Board& board, bool move)
 	if (!to.GetTower().empty()) return false;
 
 	// If these cells are not diagonal to each other
-	if (!AreDiagonal(from, to))
+	if (!AreDiagonal(from, to)) return false;
+	
+	// If the piece to move is a king, allow to move longer
+	if (from.GetTop()->IsKing()) 
 	{
-		// Can't be valid
-		return false;
-	} else {
-		// If the piece to move is a king, allow to move longer
-		if (from.GetTop()->IsKing()) 
+		// Direction. Positive is right and up
+		int x_dir = to.GetID().x()-from.GetID().x() < 0 ? -1 : 1;
+		int y_dir = to.GetID().y()-from.GetID().y() < 0 ? -1 : 1;
+		// Position being processed on the current iteration
+		int x_now = from.GetID().x()+x_dir;
+		int y_now = from.GetID().y()+y_dir;
+
+		// Iterate over the diagonal
+		while (x_now != to.GetID().x() && y_now<6 && x_now<6 && x_now>0 && y_now>0)
 		{
-			// TODO complete this section
-			return false;
-		} else {
-			// Is it trying to move backwards?
-			int direction = color==Colors::Black ? 1 : -1;
-			if (to.GetID().y()*direction > from.GetID().y()*direction) return false;
-			// Is it trying to move long distance (without a king)?
-			else if (abs(to.GetID().y()-from.GetID().y()) > 2) return false;
-			// Is it trying to just move?
-			else if (abs(to.GetID().y()-from.GetID().y()) == 1)
+			if (board.GetCellByID(CellID(x_now, y_now))->GetTop()) // If is not empty, there might be an enemy
 			{
-				// Is it trying to move without taking
-				if (AreAnyTakesAvailable(color, board)) return false;
-				else {
-					if (move) Move(&to, &from);
-					return true;
+				if (board.GetCellByID(CellID(x_now, y_now))->GetTop()->GetColor() == color) break; // Can't jump over a friend
+				else { // It is an enemy
+					// May be possible to jump over this one
+					x_now = x_now + x_dir;
+					y_now = y_now + y_dir;
+
+					if (board.GetCellByID(CellID(x_now, y_now))->GetTop() == nullptr && x_now == to.GetID().x()) { // Is empty, can take
+						if (move) {
+							x_dir = x_dir*-1;
+							y_dir = y_dir*-1;
+							Cell* takenCell = board.GetCellByID(CellID(to.GetID().x()+x_dir, to.GetID().y()+y_dir));
+							Move(&to, &from, takenCell);
+						}
+						return true; 
+					}
+					else return false;
 				}
 			}
-			// Is it trying to take a piece of the same color?
-			else if (board.GetCellByID(CellID((from.GetID().x()+to.GetID().x())/2, (from.GetID().y()+to.GetID().y())/2))
-					->GetTop()->GetColor() == color) return false;
+			x_now = x_now + x_dir;
+			y_now = y_now + y_dir;
 		}
+		return false;
+
+	// Is not a king, allow it to move only one or just jump
+	} else {
+		// Is it trying to move backwards?
+		int direction = color==Colors::Black ? 1 : -1;
+		if (to.GetID().y()*direction > from.GetID().y()*direction) return false;
+		// Is it trying to move long distance (without a king)?
+		else if (abs(to.GetID().y()-from.GetID().y()) > 2) return false;
+		// Is it trying to just move?
+		else if (abs(to.GetID().y()-from.GetID().y()) == 1)
+		{
+			// Is it trying to move without taking
+			if (AreAnyTakesAvailable(color, board)) return false;
+			else {
+				if (move) Move(&to, &from);
+				return true;
+			}
+		}
+		// Is it trying to take a piece of the same color?
+		else if (board.GetCellByID(CellID((from.GetID().x()+to.GetID().x())/2, (from.GetID().y()+to.GetID().y())/2))
+				->GetTop()->GetColor() == color) return false;
 	}
 
 	// If we got here it means it is legal and we take
