@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Piece.h"
 
-// TODO each piece should have its own offset based on its position on the tower.
-// In that case, don't change this
 
 Piece::Piece(bool color, Cell* cell) : mColor(color)
 {
