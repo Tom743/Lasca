@@ -67,7 +67,6 @@ void Piece::SetCellID(codes::CellID ID)
 	mCellID = ID;
 }
 
-
 void Piece::LoadTexture(bool king)
 {
 	// Texture settings

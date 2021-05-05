@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Mover.h"
+#include "BBar.h"
 
 class GameState {
 public:
@@ -23,6 +24,12 @@ private:
 	Board mBoardCells = Board();
 	// The cell that owns the currently moving tower of pieces. nullptr if not dragging
 	Cell* mMovingTowerCell;
+
+	// The bottom bar that contains indicators and stats
+	BBar mBBar = BBar();
+
+	// The player that is currently playing
+	bool mPlayerOnTurn = codes::Colors::White;
 
 	// Move validator and performer
 	Mover mMover = Mover();

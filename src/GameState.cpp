@@ -45,16 +45,19 @@ bool GameState::ProcessInput()
 			// Left mouse button pressed
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				// If the user user is trying to move a piece grab it
+				// If the user user is trying to move on of its pieces grab it
 				for (std::vector<Cell*> r : mBoardCells.GetCells()) for (Cell* c : r)
 				{
 					if (c->getGlobalBounds().contains(mousePos))
 					{
 						if (c->GetTop() != nullptr)
 						{
-							oldPos = c->GetBottom()->GetPosition();
-							offset = mousePos-oldPos;
-							mMovingTowerCell = c;
+							if (c->GetTop()->GetColor()==mPlayerOnTurn)
+							{
+								oldPos = c->GetBottom()->GetPosition();
+								offset = mousePos-oldPos;
+								mMovingTowerCell = c;
+							}
 						}
 						break;
 					}
@@ -84,6 +87,8 @@ bool GameState::ProcessInput()
 						{
 							mMovingTowerCell=nullptr;
 							success = true;
+							mPlayerOnTurn=!mPlayerOnTurn;
+							mBBar.ChangePlayerColor(mPlayerOnTurn);
 						}
 						break;
 					}
@@ -135,6 +140,9 @@ void GameState::Draw()
 		for (auto it = tower.rbegin(); it!=tower.rend(); ++it)
 			gWindow->draw((*it)->GetSprite());
 	}
+
+	// Draw the bottom bar
+	mBBar.Draw(gWindow);
 }
 
 sf::Color GameState::getBackGroundColor()
