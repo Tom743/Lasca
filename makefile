@@ -21,7 +21,6 @@ $(TARGET): $(OBJ_FILES)
 	$(CC) $(CPPFLAGS) -o $@ $^ $(CXXFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	mkdir -p obj
 	$(CC) $(CPPFLAGS) -c -o $@ $< $(CXXFLAGS) 
 
 # make clean before compiling for debug if the last try wasn't debug
@@ -31,4 +30,3 @@ debug: $(TARGET)
 
 clean:
 	rm -fv $(OBJ_FILES) $(TARGET)
-	rmdir $(OBJ_DIR)
